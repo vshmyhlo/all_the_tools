@@ -3,7 +3,7 @@ import torch.nn as nn
 
 
 class FilterResponseNorm(nn.Module):
-    def __init__(self, num_features, eps=1e-6):
+    def __init__(self, num_features, eps=1e-5):
         super().__init__()
 
         self.eps = eps
