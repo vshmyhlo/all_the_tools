@@ -36,3 +36,21 @@ class TLU(nn.Module):
         input = torch.max(input, self.tau)
 
         return input
+
+
+class PositionalEncoding(nn.Module):
+    def forward(self, input, start=0):
+        _, t, c = input.size()
+
+        pos = start + torch.arange(t, dtype=input.dtype, device=input.device).unsqueeze(1)
+        i = torch.arange(c, dtype=input.dtype, device=input.device).unsqueeze(0)
+        enc = pos / 10000**(2 * i / c)
+        enc = torch.cat([
+            torch.sin(enc[:, 0::2]),
+            torch.cos(enc[:, 1::2]),
+        ], 1)
+        enc = enc.unsqueeze(0)
+
+        input = input + enc
+
+        return input
