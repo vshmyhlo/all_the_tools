@@ -2,14 +2,16 @@ import numpy as np
 
 
 class Mean(object):
-    def __init__(self):
+    def __init__(self, axis=None):
+        self.axis = axis
         self.values = []
 
     def compute(self):
-        return sum(self.values) / len(self.values)
-
+        values = np.concatenate(self.values, 0)
+        return values.mean(self.axis)
+  
     def update(self, value):
-        self.values.extend(np.reshape(value, [-1]))
+        self.values.append(value)
 
     def reset(self):
         self.values = []
