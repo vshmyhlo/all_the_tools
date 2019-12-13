@@ -23,3 +23,15 @@ class Saver(object):
             self.objects[k].load_state_dict(state[k])
 
         return state['epoch']
+
+
+def one_hot(input, num_classes, dtype=torch.float):
+    return torch.eye(num_classes, dtype=dtype, device=input.device)[input]
+
+
+def seed_torch(seed):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
