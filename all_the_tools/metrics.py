@@ -28,6 +28,10 @@ class Mean(Metric):
         return values.mean(self.axis)
 
     def update(self, value):
+        value = np.array(value)
+        if value.ndim == 0:
+            value = value.reshape(-1)
+
         self.values.append(value)
 
     def reset(self):

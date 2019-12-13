@@ -16,3 +16,10 @@ def test_mean():
     m.update([[0, 1, 2]] * 3)
 
     assert np.array_equal(m.compute_and_reset(), [0, 1, 2])
+
+    m = Mean()
+    m.update(0)
+    m.update(1)
+    m.update(2)
+
+    assert np.array_equal(m.compute_and_reset(), 1)
