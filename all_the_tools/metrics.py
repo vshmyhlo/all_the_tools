@@ -21,21 +21,23 @@ class Metric(object):
 class Mean(Metric):
     def __init__(self, axis=None):
         self.axis = axis
-        self.values = []
+        self.reset()
 
     def compute(self):
-        values = np.concatenate(self.values, 0)
-        return values.mean(self.axis)
+        return self.sum / self.count
 
     def update(self, value):
         value = np.array(value)
         if value.ndim == 0:
             value = value.reshape(-1)
+        count = np.ones_like(value)
 
-        self.values.append(value)
+        self.sum += value.sum(self.axis)
+        self.count += count.sum(self.axis)
 
     def reset(self):
-        self.values = []
+        self.sum = 0
+        self.count = 0
 
 
 class Last(Metric):
