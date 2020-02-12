@@ -111,7 +111,7 @@ class EWA(torch.optim.Optimizer):
         super().load_state_dict(state_dict['state_dict'])
 
 
-class LA(torch.optim.Optimizer):
+class LookAhead(torch.optim.Optimizer):
     def __init__(self, optimizer, lr, num_steps):
         self.optimizer = optimizer
 
