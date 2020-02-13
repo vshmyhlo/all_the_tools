@@ -7,7 +7,7 @@ class Metric(object):
     def compute(self):
         raise NotImplementedError
 
-    def update(self, value):
+    def update(self, *args, **kwargs):
         raise NotImplementedError
 
     def reset(self):
