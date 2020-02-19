@@ -4,6 +4,9 @@ import numpy as np
 
 
 class Metric(object):
+    def __init__(self):
+        self.reset()
+
     def compute(self):
         raise NotImplementedError
 
@@ -22,8 +25,9 @@ class Metric(object):
 
 class Mean(Metric):
     def __init__(self, axis=None):
+        super().__init__()
+
         self.axis = axis
-        self.reset()
 
     def compute(self):
         return self.sum / self.count
@@ -42,10 +46,23 @@ class Mean(Metric):
         self.count = 0
 
 
-class Last(Metric):
-    def __init__(self):
-        self.value = None
+class Concat(Metric):
+    def __init__(self, axis=None):
+        super().__init__()
 
+        self.axis = axis
+
+    def compute(self):
+        return np.concatenate(self.values, self.axis)
+
+    def update(self, value):
+        self.values.append(value)
+       
+    def reset(self):
+        self.values = []
+
+
+class Last(Metric):
     def compute(self):
         return self.value
 
