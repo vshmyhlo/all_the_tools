@@ -1,31 +1,20 @@
-class Config(object):
-    def __init__(self, config):
-        if not isinstance(config, dict):
-            raise ValueError('config must be dict')
+import importlib
 
-        self.config = config
 
-    def __getattr__(self, key):
-        if key not in self.config:
-            raise KeyError(key)
+class Config(dict):
+    def __init__(self, **kwargs):
+        super().__init__()
 
-        value = self.config[key]
+        for k in kwargs:
+            setattr(self, k, kwargs[k])
 
-        if isinstance(value, dict):
-            value = Config(value)
 
-        return value
+def load_config(config_path, **kwargs):
+    spec = importlib.util.spec_from_file_location('config', config_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    config = module.config
+    for k in kwargs:
+        setattr(config, k, kwargs[k])
 
-    @classmethod
-    def from_yaml(cls, path):
-        from ruamel.yaml import YAML
-
-        with open(path) as f:
-            return cls(YAML().load(f))
-
-    @classmethod
-    def from_json(cls, path):
-        import json
-
-        with open(path) as f:
-            return cls(json.load(f))
+    return config
