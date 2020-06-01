@@ -54,7 +54,7 @@ class EMA(torch.optim.Optimizer):
 
             ema_p = param_state['ema_param']
             mom = group['ema_momentum']
-            ema_p.mul_(mom).add_(1 - mom, p.data)
+            ema_p.mul_(mom).add_(p.data, 1 - mom)
 
     def step(self, closure=None):
         assert self.training
@@ -127,7 +127,7 @@ class LookAhead(torch.optim.Optimizer):
                 param_state['la_param'].copy_(p.data)
 
             la_p = param_state['la_param']
-            la_p.add_(group['la_lr'], p.data - la_p)
+            la_p.add_(p.data - la_p, group['la_lr'])
             p.data.copy_(la_p)
 
     def step(self, closure=None):
