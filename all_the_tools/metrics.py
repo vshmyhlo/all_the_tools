@@ -57,7 +57,7 @@ class Concat(Metric):
 
     def update(self, value):
         self.values.append(value)
-       
+
     def reset(self):
         self.values = []
 
