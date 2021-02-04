@@ -1,18 +1,6 @@
 import torch.nn.functional as F
 
 
-def dice_loss(input, target, dim=None, smooth=1.0):
-    if dim is None:
-        dim = ()
-
-    i = (input * target).sum(dim)
-    c = (input + target).sum(dim)
-
-    dice = 2.0 * (i + smooth) / (c + smooth)
-    loss = 1 - dice
-    return loss
-
-
 def iou_loss(input, target, dim=None, smooth=1.0):
     if dim is None:
         dim = ()
@@ -23,6 +11,18 @@ def iou_loss(input, target, dim=None, smooth=1.0):
 
     iou = (i + smooth) / (u + smooth)
     loss = 1 - iou
+    return loss
+
+
+def dice_loss(input, target, dim=None, smooth=1.0):
+    if dim is None:
+        dim = ()
+
+    i = (input * target).sum(dim)
+    c = (input + target).sum(dim)
+
+    dice = 2.0 * (i + smooth) / (c + smooth)
+    loss = 1 - dice
     return loss
 
 
