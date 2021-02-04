@@ -3,14 +3,14 @@ import torch
 
 class Saver(object):
     def __init__(self, objects):
-        assert 'epoch' not in objects
+        assert "epoch" not in objects
 
         self.objects = objects
 
     def save(self, path, epoch):
         state = {
             **{k: self.objects[k].state_dict() for k in self.objects},
-            'epoch': epoch,
+            "epoch": epoch,
         }
         torch.save(state, path)
 
@@ -22,7 +22,7 @@ class Saver(object):
         for k in keys:
             self.objects[k].load_state_dict(state[k])
 
-        return state['epoch']
+        return state["epoch"]
 
 
 def one_hot(input, num_classes, dtype=torch.float):

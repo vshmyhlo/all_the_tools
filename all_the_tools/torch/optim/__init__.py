@@ -27,13 +27,13 @@ class DummySwitchable(torch.optim.Optimizer):
 
     def state_dict(self):
         return {
-            'optimizer_state_dict': self.optimizer.state_dict(),
-            'state_dict': super().state_dict(),
+            "optimizer_state_dict": self.optimizer.state_dict(),
+            "state_dict": super().state_dict(),
         }
 
     def load_state_dict(self, state_dict):
-        self.optimizer.load_state_dict(state_dict['optimizer_state_dict'])
-        super().load_state_dict(state_dict['state_dict'])
+        self.optimizer.load_state_dict(state_dict["optimizer_state_dict"])
+        super().load_state_dict(state_dict["state_dict"])
 
 
 class EMA(torch.optim.Optimizer):
@@ -45,15 +45,15 @@ class EMA(torch.optim.Optimizer):
         super().__init__(optimizer.param_groups, defaults)
 
     def update_ema_group(self, group):
-        for p in group['params']:
+        for p in group["params"]:
             param_state = self.state[p]
 
-            if 'ema_param' not in param_state:
-                param_state['ema_param'] = torch.empty_like(p.data)
-                param_state['ema_param'].copy_(p.data)
+            if "ema_param" not in param_state:
+                param_state["ema_param"] = torch.empty_like(p.data)
+                param_state["ema_param"].copy_(p.data)
 
-            ema_p = param_state['ema_param']
-            mom = group['ema_momentum']
+            ema_p = param_state["ema_param"]
+            mom = group["ema_momentum"]
             ema_p.mul_(mom).add_(p.data, alpha=1 - mom)
 
     def step(self, closure=None):
@@ -62,10 +62,10 @@ class EMA(torch.optim.Optimizer):
         loss = self.optimizer.step(closure)
 
         for group in self.param_groups:
-            group['ema_step_counter'] += 1
-            step_counter = group['ema_step_counter']
+            group["ema_step_counter"] += 1
+            step_counter = group["ema_step_counter"]
 
-            if step_counter % group['ema_num_steps'] == 0:
+            if step_counter % group["ema_num_steps"] == 0:
                 self.update_ema_group(group)
 
         return loss
@@ -75,14 +75,14 @@ class EMA(torch.optim.Optimizer):
         self.training = True
 
         for group in self.param_groups:
-            for p in group['params']:
+            for p in group["params"]:
                 param_state = self.state[p]
 
-                if 'ema_saved_param' not in param_state:
-                    param_state['ema_saved_param'] = torch.empty_like(p.data)
-                    param_state['ema_saved_param'].copy_(p.data)
+                if "ema_saved_param" not in param_state:
+                    param_state["ema_saved_param"] = torch.empty_like(p.data)
+                    param_state["ema_saved_param"].copy_(p.data)
 
-                ema_saved_p = param_state['ema_saved_param']
+                ema_saved_p = param_state["ema_saved_param"]
 
                 p.data.copy_(ema_saved_p)
 
@@ -91,24 +91,24 @@ class EMA(torch.optim.Optimizer):
         self.training = False
 
         for group in self.param_groups:
-            for p in group['params']:
+            for p in group["params"]:
                 param_state = self.state[p]
 
-                ema_p = param_state['ema_param']
-                ema_saved_p = param_state['ema_saved_param']
+                ema_p = param_state["ema_param"]
+                ema_saved_p = param_state["ema_saved_param"]
 
                 ema_saved_p.copy_(p.data)
                 p.data.copy_(ema_p)
 
     def state_dict(self):
         return {
-            'optimizer_state_dict': self.optimizer.state_dict(),
-            'state_dict': super().state_dict(),
+            "optimizer_state_dict": self.optimizer.state_dict(),
+            "state_dict": super().state_dict(),
         }
 
     def load_state_dict(self, state_dict):
-        self.optimizer.load_state_dict(state_dict['optimizer_state_dict'])
-        super().load_state_dict(state_dict['state_dict'])
+        self.optimizer.load_state_dict(state_dict["optimizer_state_dict"])
+        super().load_state_dict(state_dict["state_dict"])
 
 
 class LookAhead(torch.optim.Optimizer):
@@ -119,35 +119,35 @@ class LookAhead(torch.optim.Optimizer):
         super().__init__(optimizer.param_groups, defaults)
 
     def update_la_group(self, group):
-        for p in group['params']:
+        for p in group["params"]:
             param_state = self.state[p]
 
-            if 'la_param' not in param_state:
-                param_state['la_param'] = torch.empty_like(p.data)
-                param_state['la_param'].copy_(p.data)
+            if "la_param" not in param_state:
+                param_state["la_param"] = torch.empty_like(p.data)
+                param_state["la_param"].copy_(p.data)
 
-            la_p = param_state['la_param']
-            la_p.add_(p.data - la_p, alpha=group['la_lr'])
+            la_p = param_state["la_param"]
+            la_p.add_(p.data - la_p, alpha=group["la_lr"])
             p.data.copy_(la_p)
 
     def step(self, closure=None):
         loss = self.optimizer.step(closure)
 
         for group in self.param_groups:
-            group['la_step_counter'] += 1
-            step_counter = group['la_step_counter']
+            group["la_step_counter"] += 1
+            step_counter = group["la_step_counter"]
 
-            if step_counter % group['la_num_steps'] == 0:
+            if step_counter % group["la_num_steps"] == 0:
                 self.update_la_group(group)
 
         return loss
 
     def state_dict(self):
         return {
-            'optimizer_state_dict': self.optimizer.state_dict(),
-            'state_dict': super().state_dict(),
+            "optimizer_state_dict": self.optimizer.state_dict(),
+            "state_dict": super().state_dict(),
         }
 
     def load_state_dict(self, state_dict):
-        self.optimizer.load_state_dict(state_dict['optimizer_state_dict'])
-        super().load_state_dict(state_dict['state_dict'])
+        self.optimizer.load_state_dict(state_dict["optimizer_state_dict"])
+        super().load_state_dict(state_dict["state_dict"])

@@ -1,6 +1,6 @@
 import torch
 
-from all_the_tools.torch.nn import FilterResponseNorm, TLU
+from all_the_tools.torch.nn import TLU, FilterResponseNorm
 
 
 def test_filter_response_norm():

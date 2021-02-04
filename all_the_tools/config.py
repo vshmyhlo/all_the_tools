@@ -10,7 +10,7 @@ class Config(dict):
 
 
 def load_config(config_path, **kwargs):
-    spec = importlib.util.spec_from_file_location('config', config_path)
+    spec = importlib.util.spec_from_file_location("config", config_path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     config = module.config

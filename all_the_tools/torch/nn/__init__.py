@@ -16,7 +16,7 @@ class FilterResponseNorm(nn.Module):
         nn.init.zeros_(self.bias)
 
     def forward(self, input):
-        nu = (input**2).mean((2, 3), keepdim=True)
+        nu = (input ** 2).mean((2, 3), keepdim=True)
         eps = self.eps + self.eps_p.abs()
         nu = torch.sqrt(nu + eps)
 
@@ -44,11 +44,14 @@ class PositionalEncoding(nn.Module):
 
         pos = start + torch.arange(t, dtype=input.dtype, device=input.device).unsqueeze(1)
         i = torch.arange(c, dtype=input.dtype, device=input.device).unsqueeze(0)
-        enc = pos / 10000**(2 * i / c)
-        enc = torch.cat([
-            torch.sin(enc[:, 0::2]),
-            torch.cos(enc[:, 1::2]),
-        ], 1)
+        enc = pos / 10000 ** (2 * i / c)
+        enc = torch.cat(
+            [
+                torch.sin(enc[:, 0::2]),
+                torch.cos(enc[:, 1::2]),
+            ],
+            1,
+        )
         enc = enc.unsqueeze(0)
 
         input = input + enc
