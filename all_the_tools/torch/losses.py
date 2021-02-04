@@ -7,9 +7,8 @@ def dice_loss(input, target, dim=None, smooth=1.0):
 
     i = (input * target).sum(dim)
     c = (input + target).sum(dim)
-    u = c - i
 
-    dice = (2.0 * i + smooth) / (u + smooth)
+    dice = 2.0 * (i + smooth) / (c + smooth)
     loss = 1 - dice
     return loss
 
