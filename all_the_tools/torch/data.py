@@ -32,6 +32,17 @@ class ChunkedDataLoader(object):
                 self.iter = None
 
 
+class ZipDataLoader(object):
+    def __init__(self, *iterables):
+        self.iterables = iterables
+
+    def __len__(self):
+        return min(map(len, self.iterables))
+
+    def __iter__(self):
+        return zip(*self.iterables)
+
+
 class DictCollate(object):
     def __init__(self, collates):
         self.collates = collates
